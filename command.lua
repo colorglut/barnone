@@ -1,5 +1,5 @@
 require('common')
-local commandTypes = require('commandtypes')
+local player = require('player')
 
 local resourceManager = AshitaCore:GetResourceManager()
 
@@ -13,6 +13,19 @@ local function splitArgs(line)
     return args
 end
 
+local commandTypes = {
+    WAIT = 1,
+    ABILITY = 2,
+    SPELL = 3,
+    RANGED = 4,
+    WEAPON_SKILL = 5,
+    ECHO = 6,
+    CHECK = 7,
+    HEAL = 8,
+    RECAST = 9,
+    ATTACK = 10
+}
+
 local commandTypeStrings = {
     [commandTypes.WAIT] = {'wait'},
     [commandTypes.ABILITY] = {'ja', 'pet'},
@@ -21,7 +34,14 @@ local commandTypeStrings = {
     [commandTypes.WEAPON_SKILL] = {'ws'},
     [commandTypes.ECHO] = {'echo'},
     [commandTypes.CHECK] = {'check'},
-    [commandTypes.HEAL] = {'heal'}
+    [commandTypes.HEAL] = {'heal'},
+    [commandTypes.RECAST] = {'recast'},
+    [commandTypes.ATTACK] = {'attack'}
+}
+
+local commandRanges = {
+    [commandType.RANGED] = 25,
+    [commandType.ATTACK] = 30
 }
 
 local function parseCommandType(args)
@@ -72,6 +92,28 @@ end
 
 function command:getManaCost()
     return self:getSpell().ManaCost
+end
+
+function command:getMaxRange()
+    return commandRanges[self.type]
+end
+
+function command:isSelfTarget()
+    return self.args[#self.args] == '<me>'
+end
+
+function command:isExecutable()
+    if self.type == commandTypes.WEAPON_SKILL then
+        return player:hasTarget() and player:targetIsEnemy() and player:getTP() >= 1000
+    elseif self.type == commandTypes.SPELL then
+        return player:getMP() >= command:getManaCost()
+    elseif self.type == commandTypes.CHECK then
+        return player:hasTarget()
+    elseif self.type == commandTypes.RANGED or self.type == commandTypes.ATTACK then
+        return player:hasTarget() and player:targetIsEnemy() and player:getTargetDistance() <= command:getMaxRange()
+    else
+        return true
+    end
 end
 
 function command:execute()

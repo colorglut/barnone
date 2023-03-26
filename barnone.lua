@@ -11,6 +11,7 @@ local keycodes = require('keycodes')
 local bar = require('bar')
 
 local barnone = {
+    pressedModifierKeys = {},
     allowedMenus = {
         'playermo' -- Action menu
     }
@@ -26,7 +27,7 @@ local function parsePalette(palette)
     return bars
 end
 
-local palette = require('palettes/default')
+local palette = require('palettes/bst')
 
 barnone.bars = parsePalette(palette)
 
@@ -134,12 +135,26 @@ end)
 * desc : Event called when the addon is processing keyboard input. (DirectInput GetDeviceData)
 --]]
 ashita.events.register('key_data', 'key_cb', function (e)
+    for keyId, keyName in ipairs(keycodes.modifierKeys) do
+        if e.key == keyId then
+            if e.up then
+                table.insert(barnone.pressedModifierKeys, keyName)
+            else
+                table.remove(barnone.pressedModifierKeys, keyName)
+            end
+
+            break
+        end
+    end
+
     if e.down and not barnone.isBlockedByMenu() then
-        local key = keycodes.numberKeys[e.key];
+        local key = keycodes.numberKeys[e.key]
 
         if key then
+            local modifierKey = if #barnone.pressedModifierKeys > 0 then barnone.pressedModifierKeys[1] else nil end
+
             for i, bar in ipairs(barnone.bars) do
-                if bar:pressKey(key) then
+                if bar.modifierKey == modifierKey and bar:pressKey(key) then
                     e.blocked = true
                 end
             end

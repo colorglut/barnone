@@ -20,10 +20,22 @@ function button:new(buttonData)
     return object
 end
 
+function button:isPressable()
+    return self.macro:isExecutable()
+end
+
 function button:draw()
     local startPosX, startPosY = imgui.GetCursorScreenPos()
 
     imgui.Dummy({config.buttonWidth, config.buttonHeight})
+
+    local color
+
+    if self.macro:isExecutable() then
+        color = {0, 1, 0, 1}
+    else
+        color = {1, 0, 0, 1}
+    end
 
     imgui.GetWindowDrawList():AddRectFilled(
         {
@@ -34,12 +46,7 @@ function button:draw()
             startPosX + config.buttonWidth,
             startPosY + config.buttonHeight
         },
-        imgui.GetColorU32({
-            1, -- red
-            0, -- green
-            0, -- blue
-            1 -- alpha
-        })
+        imgui.GetColorU32(color)
     )
 
     imgui.GetWindowDrawList():AddText(
@@ -47,7 +54,7 @@ function button:draw()
             startPosX,
             startPosY
         },
-        IM_COL32_WHITE,
+        imgui.GetColorU32({0, 0, 0, 1}),
         self.label
     )
 end

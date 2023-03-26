@@ -23,6 +23,20 @@ function macro:new(macroText)
     return object
 end
 
+function macro:isExecutable()
+    local isExecutable = true
+    
+    for i, command in ipairs(self.commands) do
+        if not command:isExecutable() then
+            isExecutable = false
+            
+            break
+        end
+    end
+
+    return isExecutable
+end
+
 function macro:execute()
     for i, command in ipairs(self.commands) do
         command:execute()
