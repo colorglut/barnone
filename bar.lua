@@ -13,6 +13,8 @@ function bar:new(barData)
 
     self.__index = self
 
+    object.modifierKey = barData.modifierKey
+
     object.buttons = {}
 
     for keyIndex, key in ipairs(config.keyLayout) do

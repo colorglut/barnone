@@ -47,11 +47,41 @@ return {
                 }
             }
         },
-        --[[
         {
             modifierKey = 'shift',
-            buttons = {}
+            buttons = {
+                {
+                    key = '2',
+                    label = 'Check',
+                    macro = [[
+                        /check
+                    ]]
+                },
+                {
+                    key = '3',
+                    label = 'Third Eye',
+                    macro = [[
+                        /recast "Third Eye"
+                        /ja "Third Eye" <me>
+                    ]]
+                },
+                {
+                    key = '4',
+                    label = 'Sneak Attack',
+                    macro = [[
+                        /recast "Sneak Attack"
+                        /ja "Sneak Attack" <me>
+                    ]]
+                },
+                {
+                    key = '5',
+                    label = 'Meditate',
+                    macro = [[
+                        /recast "Meditate"
+                        /ja "Meditate" <me>
+                    ]]
+                }
+            }
         }
-        ]]--
     }
 }

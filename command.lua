@@ -23,7 +23,8 @@ local commandTypes = {
     CHECK = 7,
     HEAL = 8,
     RECAST = 9,
-    ATTACK = 10
+    ATTACK = 10,
+    EQUIPSET = 11
 }
 
 local commandTypeStrings = {
@@ -36,12 +37,13 @@ local commandTypeStrings = {
     [commandTypes.CHECK] = {'check'},
     [commandTypes.HEAL] = {'heal'},
     [commandTypes.RECAST] = {'recast'},
-    [commandTypes.ATTACK] = {'attack'}
+    [commandTypes.ATTACK] = {'attack'},
+    [commandTypes.EQUIPSET] = {'equipset'}
 }
 
 local commandRanges = {
-    [commandType.RANGED] = 25,
-    [commandType.ATTACK] = 30
+    [commandTypes.RANGED] = 25,
+    [commandTypes.ATTACK] = 30
 }
 
 local function parseCommandType(args)

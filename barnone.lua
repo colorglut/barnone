@@ -5,13 +5,33 @@ addon.desc = "Simple action bar addon."
 addon.link = ""
 
 require('common')
+require('utils')
 local imgui = require('imgui')
 local config = require('config')
-local keycodes = require('keycodes')
 local bar = require('bar')
 
 local barnone = {
     pressedModifierKeys = {},
+    keyCodes = {
+        numberKeys = {
+            [2] = '1',
+            [3] = '2',
+            [4] = '3',
+            [5] = '4',
+            [6] = '5',
+            [7] = '6',
+            [8] = '7',
+            [9] = '8',
+            [10] = '9',
+            [11] = '0'
+        },
+    
+        modifierKeys = {
+            [42] = 'shift',
+            [29] = 'ctrl',
+            [56] = 'alt'
+        }
+    },
     allowedMenus = {
         'playermo' -- Action menu
     }
@@ -27,7 +47,7 @@ local function parsePalette(palette)
     return bars
 end
 
-local palette = require('palettes/bst')
+local palette = require('palettes/default')
 
 barnone.bars = parsePalette(palette)
 
@@ -135,12 +155,12 @@ end)
 * desc : Event called when the addon is processing keyboard input. (DirectInput GetDeviceData)
 --]]
 ashita.events.register('key_data', 'key_cb', function (e)
-    for keyId, keyName in ipairs(keycodes.modifierKeys) do
+    for keyId, keyName in pairs(barnone.keyCodes.modifierKeys) do
         if e.key == keyId then
-            if e.up then
+            if e.down then
                 table.insert(barnone.pressedModifierKeys, keyName)
             else
-                table.remove(barnone.pressedModifierKeys, keyName)
+                tableRemove(barnone.pressedModifierKeys, keyName)
             end
 
             break
@@ -148,14 +168,16 @@ ashita.events.register('key_data', 'key_cb', function (e)
     end
 
     if e.down and not barnone.isBlockedByMenu() then
-        local key = keycodes.numberKeys[e.key]
+        local key = barnone.keyCodes.numberKeys[e.key]
 
         if key then
-            local modifierKey = if #barnone.pressedModifierKeys > 0 then barnone.pressedModifierKeys[1] else nil end
+            local modifierKey = #barnone.pressedModifierKeys > 0 and barnone.pressedModifierKeys[1] or nil
 
             for i, bar in ipairs(barnone.bars) do
                 if bar.modifierKey == modifierKey and bar:pressKey(key) then
                     e.blocked = true
+
+                    break
                 end
             end
         end
