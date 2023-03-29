@@ -52,6 +52,14 @@ return {
             modifierKey = 'shift',
             buttons = {
                 {
+                    key = '1',
+                    label = 'Utsusemi',
+                    macro = [[
+                        /recast "Utsusemi: Ichi"
+                        /nin "Utsusemi: Ichi" <me>
+                    ]]
+                },
+                {
                     key = '2',
                     label = 'Check',
                     macro = [[

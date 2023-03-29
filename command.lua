@@ -151,7 +151,7 @@ function command:isExecutable()
     if self.type == commandTypes.WEAPON_SKILL then
         return player:hasTarget() and player:targetIsEnemy() and player:getTP() >= 1000
     elseif self.type == commandTypes.SPELL then
-        return player:getMP() >= command:getManaCost()
+        return player:getMP() >= self:getManaCost()
     elseif self.type == commandTypes.CHECK then
         return player:hasTarget()
     elseif self.type == commandTypes.RANGED or self.type == commandTypes.ATTACK then
