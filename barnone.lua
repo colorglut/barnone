@@ -9,6 +9,7 @@ require('utils')
 local imgui = require('imgui')
 local config = require('config')
 local bar = require('bar')
+local recast = require('recast')
 
 local barnone = {
     pressedModifierKeys = {},
@@ -146,6 +147,8 @@ ashita.events.register('d3d_present', 'present_cb', function ()
     local player = AshitaCore:GetMemoryManager():GetPlayer()
 
     if player ~= nil and player:GetMainJob() > 0 and player:GetIsZoning() == 0 then
+        recast.updateRecasts()
+
         barnone.drawBars()
     end
 end)

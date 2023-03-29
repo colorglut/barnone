@@ -34,8 +34,9 @@ function emptyButton:draw()
             0.5, -- red
             0.5, -- green
             0.5, -- blue
-            1 -- alpha
-        })
+            0.25 -- alpha
+        }),
+        5
     )
 end
 

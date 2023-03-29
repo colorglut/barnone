@@ -46,7 +46,8 @@ function button:draw()
             startPosX + config.buttonWidth,
             startPosY + config.buttonHeight
         },
-        imgui.GetColorU32(color)
+        imgui.GetColorU32(color),
+        5
     )
 
     imgui.GetWindowDrawList():AddText(
@@ -57,6 +58,27 @@ function button:draw()
         imgui.GetColorU32({0, 0, 0, 1}),
         self.label
     )
+
+    local recastTime = self.macro:getRecastTime()
+
+    if recastTime then
+        local recastTimeString
+
+        if recastTime >= 1 then
+            recastTimeString = tostring(math.ceil(recastTime))
+        else
+            recastTimeString = string.format('%.1f', recastTime)
+        end
+
+        imgui.GetWindowDrawList():AddText(
+            {
+                startPosX,
+                startPosY + config.buttonHeight - 20
+            },
+            imgui.GetColorU32({0, 0, 0, 1}),
+            recastTimeString
+        )
+    end
 end
 
 function button:press()

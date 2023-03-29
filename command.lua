@@ -1,13 +1,44 @@
 require('common')
 local player = require('player')
+local recast = require('recast')
 
 local resourceManager = AshitaCore:GetResourceManager()
 
-local function splitArgs(line)
+function splitArgs(line)
     local args = {}
+    
+    local buff
 
-    for arg in line:gmatch('([^%s]+)') do
-        table.insert(args, arg)
+    local quotesOpen = false
+
+    for char in line:gmatch('.') do
+        if char == '"' then
+            if quotesOpen then
+                table.insert(args, buff)
+
+                buff = nil
+            end
+
+            quotesOpen = not quotesOpen
+        else
+            if char == ' ' and not quotesOpen then
+                if buff then
+                    table.insert(args, buff)
+                    
+                    buff = nil
+                end
+            elseif char ~= ' ' or quotesOpen then
+                if buff then
+                    buff = buff .. char
+                else
+                    buff = char
+                end
+            end
+        end
+    end
+
+    if buff then
+        table.insert(args, buff)
     end
 
     return args
@@ -85,15 +116,25 @@ function command:new(line)
 end
 
 function command:getAbility()
-    return resourceManager:GetAbilityByName(self.args[2])
+    return resourceManager:GetAbilityByName(self.args[2], 0)
 end
 
 function command:getSpell()
-    return resourceMananger:GetSpellByName(self.args[2])
+    return resourceManager:GetSpellByName(self.args[2], 0)
 end
 
 function command:getManaCost()
     return self:getSpell().ManaCost
+end
+
+function command:getRecastTime()
+    if self.type == commandTypes.ABILITY then
+        return recast.cooldowns.abilities[self:getAbility().Id]
+    elseif self.type == commandTypes.SPELL then
+        return recast.cooldowns.spells[self:getSpell().Id]
+    else
+        return nil
+    end
 end
 
 function command:getMaxRange()
@@ -113,6 +154,8 @@ function command:isExecutable()
         return player:hasTarget()
     elseif self.type == commandTypes.RANGED or self.type == commandTypes.ATTACK then
         return player:hasTarget() and player:targetIsEnemy() and player:getTargetDistance() <= command:getMaxRange()
+    elseif self.type == commandTypes.ABILITY then
+        return self:getRecastTime() == nil
     else
         return true
     end
