@@ -35,6 +35,10 @@ local barnone = {
     },
     allowedMenus = {
         'playermo' -- Action menu
+    },
+    hiddenMenus = {
+        'fulllog', -- Expanded log window
+        'map0' -- Full screen amp
     }
 }
 
@@ -51,44 +55,6 @@ end
 local palette = require('palettes/default')
 
 barnone.bars = parsePalette(palette)
-
---[[
-local recast = AshitaCore:GetMemoryManager():GetRecast()
-local resourceManager = AshitaCore:GetResourceManager()
-
-barnone.getAbilityRecastTime = function(abilityName)
-    local ability = resourceManager:GetAbilityByName(abilityName, 0)
-
-    if not ability then
-        return nil
-    end
-
-    local timerId = recast:GetAbilityTimerId(ability.Id)
-    local timer = (recast:GetAbilityTimer(timerId) / 60):round()
-
-    if timer > 0 then
-        return timer
-    else
-        return nil
-    end
-end
-
-barnone.getSpellRecastTime = function(spellName)
-    local spell = resourceManager:GetSpellByName(spellName, 0)
-
-    if not spell then
-        return nil
-    end
-
-    local timer = (recast:GetSpellTimer(spell.Index) / 60):round()
-
-    if timer > 0 then
-        return timer
-    else
-        return nil
-    end
-end
-]]--
 
 -- Credit to Velyn for this logic - borrowed from HXUI
 local pGameMenu = ashita.memory.find('FFXiMain.dll', 0, "8B480C85C974??8B510885D274??3B05", 16, 0)
@@ -107,7 +73,7 @@ barnone.getCurrentMenu = function()
     return menuName:sub(9):trim()
 end
 
-barnone.isBlockedByMenu = function()
+barnone.inputBlockedByMenu = function()
     local currentMenu = barnone.getCurrentMenu()
 
     if currentMenu then
@@ -122,6 +88,26 @@ barnone.isBlockedByMenu = function()
         end
 
         return isBlocked
+    else
+        return false
+    end
+end
+
+barnone.hiddenByMenu = function()
+    local currentMenu = barnone.getCurrentMenu()
+
+    if currentMenu then
+        local isHidden = false
+
+        for i, menuName in ipairs(barnone.hiddenMenus) do
+            if menuName == currentMenu then
+                isHidden = true
+
+                break
+            end
+        end
+
+        return isHidden
     else
         return false
     end
@@ -146,7 +132,7 @@ end
 ashita.events.register('d3d_present', 'present_cb', function ()
     local player = AshitaCore:GetMemoryManager():GetPlayer()
 
-    if player ~= nil and player:GetMainJob() > 0 and player:GetIsZoning() == 0 then
+    if player ~= nil and player:GetMainJob() > 0 and player:GetIsZoning() == 0 and not barnone.hiddenByMenu() then
         recast.updateRecasts()
 
         barnone.drawBars()
@@ -170,7 +156,7 @@ ashita.events.register('key_data', 'key_cb', function (e)
         end
     end
 
-    if e.down and not barnone.isBlockedByMenu() then
+    if e.down and not barnone.inputBlockedByMenu() then
         local key = barnone.keyCodes.numberKeys[e.key]
 
         if key then
