@@ -31,9 +31,10 @@ return {
                     key = '4',
                     label = 'Tachi: Enpi',
                     macro = [[
+                        /p <<Tachi: Enpi>> <tp>
                         /equipset 22 echo
                         /ws "Tachi: Enpi" <t>
-                        /wait 1
+                        /wait 2
                         /equipset 21 echo
                     ]]
                 },

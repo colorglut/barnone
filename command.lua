@@ -55,7 +55,8 @@ local commandTypes = {
     HEAL = 8,
     RECAST = 9,
     ATTACK = 10,
-    EQUIPSET = 11
+    EQUIPSET = 11,
+    PARTY = 12
 }
 
 local commandTypeStrings = {
@@ -69,7 +70,8 @@ local commandTypeStrings = {
     [commandTypes.HEAL] = {'heal'},
     [commandTypes.RECAST] = {'recast'},
     [commandTypes.ATTACK] = {'attack'},
-    [commandTypes.EQUIPSET] = {'equipset'}
+    [commandTypes.EQUIPSET] = {'equipset'},
+    [commandTypes.PARTY] = {'p', 'party'}
 }
 
 local commandRanges = {

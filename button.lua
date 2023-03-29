@@ -20,6 +20,10 @@ function button:new(buttonData)
     return object
 end
 
+function button:getIconTexture()
+
+end
+
 function button:isPressable()
     return self.macro:isExecutable()
 end
@@ -37,18 +41,36 @@ function button:draw()
         color = {1, 0, 0, 1}
     end
 
-    imgui.GetWindowDrawList():AddRectFilled(
-        {
-            startPosX,
-            startPosY
-        },
-        {
-            startPosX + config.buttonWidth,
-            startPosY + config.buttonHeight
-        },
-        imgui.GetColorU32(color),
-        5
-    )
+    if self.icon then
+        imgui.GetWindowDrawList():AddImageRounded(
+            self:getIconTexture(),
+            {
+                startPosX,
+                startPosY
+            },
+            {
+                startPosX + config.buttonWidth,
+                startPosY + config.buttonHeight
+            },
+            {0, 0},
+            {1 , 1},
+            IM_COL32_WHITE,
+            5
+        )
+    else
+        imgui.GetWindowDrawList():AddRectFilled(
+            {
+                startPosX,
+                startPosY
+            },
+            {
+                startPosX + config.buttonWidth,
+                startPosY + config.buttonHeight
+            },
+            imgui.GetColorU32(color),
+            5
+        )
+    end
 
     imgui.GetWindowDrawList():AddText(
         {

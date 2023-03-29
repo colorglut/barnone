@@ -59,7 +59,7 @@ barnone.bars = parsePalette(palette)
 -- Credit to Velyn for this logic - borrowed from HXUI
 local pGameMenu = ashita.memory.find('FFXiMain.dll', 0, "8B480C85C974??8B510885D274??3B05", 16, 0)
 
-barnone.getCurrentMenu = function()
+function barnone.getCurrentMenu()
     local subPointer = ashita.memory.read_uint32(pGameMenu)
     local subValue = ashita.memory.read_uint32(subPointer)
 
@@ -73,7 +73,7 @@ barnone.getCurrentMenu = function()
     return menuName:sub(9):trim()
 end
 
-barnone.inputBlockedByMenu = function()
+function barnone.inputBlockedByMenu()
     local currentMenu = barnone.getCurrentMenu()
 
     if currentMenu then
@@ -93,7 +93,7 @@ barnone.inputBlockedByMenu = function()
     end
 end
 
-barnone.hiddenByMenu = function()
+function barnone.hiddenByMenu()
     local currentMenu = barnone.getCurrentMenu()
 
     if currentMenu then
@@ -113,7 +113,7 @@ barnone.hiddenByMenu = function()
     end
 end
 
-barnone.drawBars = function()
+function barnone.drawBars()
     local windowFlags = bit.bor(ImGuiWindowFlags_NoDecoration, ImGuiWindowFlags_AlwaysAutoResize, ImGuiWindowFlags_NoFocusOnAppearing, ImGuiWindowFlags_NoNav, ImGuiWindowFlags_NoBackground, ImGuiWindowFlags_NoBringToFrontOnFocus)
 
     if imgui.Begin('barnone_bars', true, windowFlags) then
