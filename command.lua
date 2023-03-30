@@ -56,7 +56,7 @@ local commandTypes = {
     RECAST = 9,
     ATTACK = 10,
     EQUIPSET = 11,
-    PARTY = 12
+    CHAT = 12
 }
 
 local commandTypeStrings = {
@@ -71,7 +71,7 @@ local commandTypeStrings = {
     [commandTypes.RECAST] = {'recast'},
     [commandTypes.ATTACK] = {'attack'},
     [commandTypes.EQUIPSET] = {'equipset'},
-    [commandTypes.PARTY] = {'p', 'party'}
+    [commandTypes.CHAT] = {'p', 'party', 'l', 'linkshell', 'l2', 'linkshell2', 'say', 's', 'shout', 's', 'em', 't', 'tell'}
 }
 
 local commandRanges = {
