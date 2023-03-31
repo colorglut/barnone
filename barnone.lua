@@ -117,7 +117,7 @@ function barnone.drawBars()
     local windowFlags = bit.bor(ImGuiWindowFlags_NoDecoration, ImGuiWindowFlags_AlwaysAutoResize, ImGuiWindowFlags_NoFocusOnAppearing, ImGuiWindowFlags_NoNav, ImGuiWindowFlags_NoBackground, ImGuiWindowFlags_NoBringToFrontOnFocus)
 
     if imgui.Begin('barnone_bars', true, windowFlags) then
-        imgui.PushStyleVar(ImGuiStyleVar_ItemSpacing, {config.buttonSpacing, config.buttonSpacing * 2})
+        imgui.PushStyleVar(ImGuiStyleVar_ItemSpacing, {config.buttonSpacing, config.buttonSpacing})
 
         for barIndex = #barnone.bars, 1, -1 do
             barnone.bars[barIndex]:draw()

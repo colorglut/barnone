@@ -22,7 +22,9 @@ recast.updateRecasts = function()
         if (id ~= 0 or i == 0) and timer > 0 then
             local ability = resourceManager:GetAbilityByTimerId(id)
 
-            recast.cooldowns.abilities[ability.Id] = timer
+            if ability then
+                recast.cooldowns.abilities[ability.Id] = timer
+            end
         end
     end
 
@@ -33,7 +35,9 @@ recast.updateRecasts = function()
         if timer > 0 then
             local spell = resourceManager:GetSpellById(id)
 
-            recast.cooldowns.spells[spell.Id] = timer
+            if spell then
+                recast.cooldowns.spells[spell.Id] = timer
+            end
         end
     end
 end
